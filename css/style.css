@@ -1,0 +1,22 @@
+body {
+    background-color: #1BCED1;
+}
+
+h1 {
+ font-size: xx-large;
+ font-family: 'Ranchers', cursive;
+ margin:50px;
+ margin-left:35% ;
+}
+
+section{
+    width: 95%;
+    margin: auto;
+}
+section img{
+    width:30%;
+    float:left;
+    height:50vh;
+ padding-right:10px; 
+
+}
