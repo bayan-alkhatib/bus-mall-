@@ -14,9 +14,37 @@ section{
     margin: auto;
 }
 section img{
-    width:30%;
+    width:32%;
     float:left;
     height:50vh;
  padding-right:10px; 
+}
 
+#resultsButton button{
+    margin-top:15px ;
+    padding: 15px 40px;
+    font-size: x-large;
+    background-color: rgb(156, 10, 10);
+    margin-left: 40%;
+    border: solid wheat;
+    border-radius: 15px;
+    color: wheat;
+}
+
+#list ul{
+    margin:20px;
+    margin: left 40px;
+    width: 100%;
+    
+}
+
+#list ul li{
+    font-style: italic;
+    font-size: large;
+    margin-bottom: 20px;
+    margin-right:20px ;
+    list-style-type:square;
+    float: left;
+    width:30%;
+      
 }

@@ -42,25 +42,25 @@ function randomImage(){
     console.log(firstImage,firstRandomImage);
     
     const secondIndex=randomNum(BusMall.productsImg.length-1,0);
-    while(secondIndex != firstIndex){
+    
+   if(secondIndex != firstIndex){
     const secondRandomImg=BusMall.productsImg[secondIndex];
     secondImage.src=secondRandomImg.path;
     secondImage.title=secondRandomImg.name;
     secondImage.alt=secondImage.name;
     secondRandomImg.views++;
     console.log(secondImage,secondRandomImg); 
-    break;
     }
 
     const thirdIndex=randomNum(BusMall.productsImg.length-1,0);
-    while(thirdIndex!=secondIndex && thirdIndex!=firstIndex){
+    
+    if(thirdIndex!=secondIndex && thirdIndex!=firstIndex){
     const thirdRandomImage=BusMall.productsImg[thirdIndex];
     thirdImage.src=thirdRandomImage.path;
     thirdImage.title=thirdRandomImage.name;
     thirdImage.alt=thirdRandomImage.name;
     thirdRandomImage.views++;
     console.log(thirdImage,thirdRandomImage);
-    break;
     }
 }
 
@@ -70,36 +70,55 @@ randomImage();
 //////////////////////////////// trace click(event lesten)//////////////////////////
      
 let userAlert=alert('Please Choose an image');
-let results=document.getElementById('results')
+let resultsButton=document.getElementById('resultsButton');
 
 let attempts = 25;
 
-
-for (let j=0;j<attempts;j++){
-
+let counter=0;
 imageSection.addEventListener('click',imageCount)
 
 function imageCount(event){ 
-    if(event.target.id =='firstImage' || event.target.id == 'secondImage'|| event.target.id == 'thirdImage'){
+    
+    if(event.target.id ==='firstImage' || event.target.id === 'secondImage'|| event.target.id === 'thirdImage'){
          for (let i=0; i<BusMall.productsImg.length;i++){
             if(BusMall.productsImg[i].name === event.target.title){
                 BusMall.productsImg[i].likes++;
+                counter++;
                 console.table(BusMall.productsImg[i]);
 
             }
         }
     }
+
     randomImage();
+
+    if(counter===attempts){
+
+        imageSection.removeEventListener('click',imageCount);
+        let button=document.createElement('button');
+        resultsButton.appendChild(button);
+        button.textContent='Results';
+        resultsButton.addEventListener('click',resultDesplay);
+    
+        function resultDesplay(event){
+
+            let list=document.getElementById('list');
+            let unorderedlist=document.createElement('ul');
+            list.appendChild(unorderedlist);
+            
+            for(let i=0; i< BusMall.productsImg.length; i++){
+                
+                let listItem=document.createElement('li');
+                unorderedlist.appendChild(listItem); 
+                listItem.textContent= BusMall.productsImg[i].name +' had '+ BusMall.productsImg[i].likes+' votes, and was seen '+ BusMall.productsImg[i].views+' times' ;
+            }
+        }
+    }
 }
 
+    
+    
+    
+   
+    
 
-// if(j==attempts-1){
-
-//     results.addEventListener('click',resultDesplay(event){
-//     let list=document.createElement('ul');
-//         imageSection.removeEventListener('click',imageCount);
-//     })
-
-//     break;
-// }
-}
