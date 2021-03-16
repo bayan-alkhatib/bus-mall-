@@ -3,10 +3,11 @@
 let productsNames=['bag.jpg','banana.jpg','bathroom.jpg','boots.jpg','breakfast.jpg','bubblegum.jpg','chair.jpg','cthulhu.jpg',
 'dog-duck.jpg','dragon.jpg','pen.jpg','pet-sweep.jpg','scissors.jpg','shark.jpg','sweep.png','tauntaun.jpg','unicorn.jpg','usb.gif','water-can.jpg','wine-glass.jpg'];
 
-let imageSection=document.getElementById('imageSection')
+let imageSection=document.getElementById('imageSection');
 let firstImage=document.getElementById('firstImage');
 let secondImage=document.getElementById('secondImage');
 let thirdImage=document.getElementById('thirdImage');
+//console.log(secondImage);
 
 /////////////////////////////////////////Constructor Fun //////////////////////////
 function BusMall(name){
@@ -26,71 +27,77 @@ for(let i=0;i<productsNames.length;i++){
 
 console.table(BusMall.productsImg);
 
-////////////////////////////// fun to display Random Imgs /////////////////////////////
+////////////////////////////// fun to display Random unique Imgs /////////////////////////////
 function randomNum(max,min){
     return Math.floor(Math.random()*(max-min+1)+min)
 }
 
-function randomImage(){
-    
-    const firstIndex=randomNum(BusMall.productsImg.length-1,0);
-    const firstRandomImage=BusMall.productsImg[firstIndex];
-    firstImage.src=firstRandomImage.path;
-    firstImage.title=firstRandomImage.name;
-    firstImage.alt=firstRandomImage.name;
-    firstRandomImage.views++;
-    console.log(firstImage,firstRandomImage);
-    
-    const secondIndex=randomNum(BusMall.productsImg.length-1,0);
-    
-   if(secondIndex != firstIndex){
-    const secondRandomImg=BusMall.productsImg[secondIndex];
-    secondImage.src=secondRandomImg.path;
-    secondImage.title=secondRandomImg.name;
-    secondImage.alt=secondImage.name;
-    secondRandomImg.views++;
-    console.log(secondImage,secondRandomImg); 
-    }
+function randomImage(image,index){
 
-    const thirdIndex=randomNum(BusMall.productsImg.length-1,0);
-    
-    if(thirdIndex!=secondIndex && thirdIndex!=firstIndex){
-    const thirdRandomImage=BusMall.productsImg[thirdIndex];
-    thirdImage.src=thirdRandomImage.path;
-    thirdImage.title=thirdRandomImage.name;
-    thirdImage.alt=thirdRandomImage.name;
-    thirdRandomImage.views++;
-    console.log(thirdImage,thirdRandomImage);
-    }
+  let randomImage=BusMall.productsImg[index];
+  console.log(BusMall.productsImg[index]);
+  image.src=randomImage.path;
+  image.title=randomImage.name;
+  image.alt=randomImage.name;
+  console.log(image);
+  randomImage.views++;
+  return randomImage;
 }
 
-randomImage();
+let uniqueArray=[];
+let firstIndex;
+let secondIndex;
+let thirdIndex;
+  
+function uniqueImage(){
+    do{
+        firstIndex=randomNum(BusMall.productsImg.length-1,0);
+        secondIndex=randomNum(BusMall.productsImg.length-1,0);
+        thirdIndex=randomNum(BusMall.productsImg.length-1,0);
+    } while(firstIndex===secondIndex || firstIndex === thirdIndex || secondIndex=== thirdIndex || uniqueArray.includes(firstIndex) || uniqueArray.includes(secondIndex)  || uniqueArray.includes(thirdIndex))
+   
+    
+    uniqueArray[0]= firstIndex;
+    uniqueArray[1]= secondIndex;
+    uniqueArray[2]= thirdIndex;
+}
 
+uniqueImage();
+randomImage(firstImage,firstIndex);
+randomImage(secondImage,secondIndex);
+randomImage(thirdImage,thirdIndex);
 
 //////////////////////////////// trace click(event lesten)//////////////////////////
      
-let userAlert=alert('Please Choose an image');
+let userAlert=alert('Please Choose an Image');
+
 let resultsButton=document.getElementById('resultsButton');
 
 let attempts = 25;
-
 let counter=0;
+let views=[];
+let likes=[];
+
 imageSection.addEventListener('click',imageCount)
 
 function imageCount(event){ 
     
     if(event.target.id ==='firstImage' || event.target.id === 'secondImage'|| event.target.id === 'thirdImage'){
          for (let i=0; i<BusMall.productsImg.length;i++){
-            if(BusMall.productsImg[i].name === event.target.title){
+            if( event.target.title === BusMall.productsImg[i].name ){
                 BusMall.productsImg[i].likes++;
                 counter++;
-                console.table(BusMall.productsImg[i]);
-
+                views.push( BusMall.productsImg[i].views);
+                likes.push( BusMall.productsImg[i].likes);
+                console.table(views,likes);
             }
         }
     }
 
-    randomImage();
+    uniqueImage();
+    randomImage(firstImage,firstIndex);
+    randomImage(secondImage,secondIndex);
+    randomImage(thirdImage,thirdIndex);
 
     if(counter===attempts){
 
@@ -101,24 +108,37 @@ function imageCount(event){
         resultsButton.addEventListener('click',resultDesplay);
     
         function resultDesplay(event){
+           
+            let ctx = document.getElementById('myChart');
 
-            let list=document.getElementById('list');
-            let unorderedlist=document.createElement('ul');
-            list.appendChild(unorderedlist);
-            
-            for(let i=0; i< BusMall.productsImg.length; i++){
-                
-                let listItem=document.createElement('li');
-                unorderedlist.appendChild(listItem); 
-                listItem.textContent= BusMall.productsImg[i].name +' had '+ BusMall.productsImg[i].likes+' votes, and was seen '+ BusMall.productsImg[i].views+' times' ;
-            }
+                let myChart = new Chart(ctx,{
+                    type: 'bar',
+                    data: {
+                        datasets: [{
+                            label: 'views',
+                            data: views,
+                            backgroundColor:'RGBA(102, 29, 121, 1)'
+                            // 'RGBA(102, 29, 121, 1)','RGBA(104, 17, 43, 1)']
+                        },
+                        {
+                            label: 'votes',
+                            data: likes,
+                            backgroundColor:'RGBA(220, 153, 205, 1)'
+                            // ,'RGBA(227, 133, 135, 1)']  
+                        }],
+                        labels:productsNames,
+                    },
+                    options: {
+                        labels: {
+                        fontColor: 'white',
+                        }
+                    }
+                })
         }
     }
 }
+  
+            
 
-    
-    
-    
+
    
-    
-
