@@ -3,10 +3,11 @@
 let productsNames=['bag.jpg','banana.jpg','bathroom.jpg','boots.jpg','breakfast.jpg','bubblegum.jpg','chair.jpg','cthulhu.jpg',
 'dog-duck.jpg','dragon.jpg','pen.jpg','pet-sweep.jpg','scissors.jpg','shark.jpg','sweep.png','tauntaun.jpg','unicorn.jpg','usb.gif','water-can.jpg','wine-glass.jpg'];
 
-let imageSection=document.getElementById('imageSection')
+let imageSection=document.getElementById('imageSection');
 let firstImage=document.getElementById('firstImage');
 let secondImage=document.getElementById('secondImage');
 let thirdImage=document.getElementById('thirdImage');
+//console.log(secondImage);
 
 /////////////////////////////////////////Constructor Fun //////////////////////////
 function BusMall(name){
@@ -26,70 +27,57 @@ for(let i=0;i<productsNames.length;i++){
 
 console.table(BusMall.productsImg);
 
-////////////////////////////// fun to display Random Imgs /////////////////////////////
+////////////////////////////// fun to display Random unique Imgs /////////////////////////////
 function randomNum(max,min){
     return Math.floor(Math.random()*(max-min+1)+min)
 }
 
-let uniqueIteration=[0,0,0];
-let secondIndex=0;
-let thirdIndex=0;
-function randomImage(){
-    
-    let firstIndex=randomNum(BusMall.productsImg.length-1,0);
-    if(uniqueIteration[0]===firstIndex || uniqueIteration[0]===secondIndex || uniqueIteration[0]===thirdIndex ){
-        firstIndex=randomNum(BusMall.productsImg.length-1,0);
-    };
-    let  firstRandomImage=BusMall.productsImg[firstIndex];
-    firstImage.src=firstRandomImage.path;
-    firstImage.title=firstRandomImage.name;
-    firstImage.alt=firstRandomImage.name;
-    firstRandomImage.views++;
-    uniqueIteration.splice(0,1,firstIndex);
-    
-     secondIndex=randomNum(BusMall.productsImg.length-1,0);
-    if(uniqueIteration[1]===firstIndex || uniqueIteration[1]===secondIndex || uniqueIteration[1]===thirdIndex){
-        secondIndex=randomNum(BusMall.productsImg.length-1,0);
-    };
-    if(secondIndex != firstIndex){
-    let secondRandomImg=BusMall.productsImg[secondIndex];
-    secondImage.src=secondRandomImg.path;
-    secondImage.title=secondRandomImg.name;
-    secondImage.alt=secondImage.name;
-    secondRandomImg.views++;
-    uniqueIteration.splice(1,1,secondIndex);
-    
-    // console.log(secondImage,secondRandomImg); 
-    }
+function randomImage(image,index){
 
-     thirdIndex=randomNum(BusMall.productsImg.length-1,0);
-    if(uniqueIteration[2]===firstIndex || uniqueIteration[2]===secondIndex || uniqueIteration[2]===thirdIndex){
-        thirdIndex=randomNum(BusMall.productsImg.length-1,0);
-    };
-    if(thirdIndex!=secondIndex && thirdIndex!=firstIndex){
-    let  thirdRandomImage=BusMall.productsImg[thirdIndex];
-    thirdImage.src=thirdRandomImage.path;
-    thirdImage.title=thirdRandomImage.name;
-    thirdImage.alt=thirdRandomImage.name;
-    thirdRandomImage.views++;
-    uniqueIteration.splice(2,1,thirdIndex);
-    
-    // console.log(thirdImage,thirdRandomImage);
-    }
+  let randomImage=BusMall.productsImg[index];
+  console.log(BusMall.productsImg[index]);
+  image.src=randomImage.path;
+  image.title=randomImage.name;
+  image.alt=randomImage.name;
+  console.log(image);
+  randomImage.views++;
+  return randomImage;
 }
-    console.log(uniqueIteration);
-    randomImage();
 
+let uniqueArray=[];
+let firstIndex;
+let secondIndex;
+let thirdIndex;
+  
+function uniqueImage(){
+    do{
+        firstIndex=randomNum(BusMall.productsImg.length-1,0);
+        secondIndex=randomNum(BusMall.productsImg.length-1,0);
+        thirdIndex=randomNum(BusMall.productsImg.length-1,0);
+    } while(firstIndex===secondIndex || firstIndex === thirdIndex || secondIndex=== thirdIndex || uniqueArray.includes(firstIndex) || uniqueArray.includes(secondIndex)  || uniqueArray.includes(thirdIndex))
+   
+    
+    uniqueArray[0]= firstIndex;
+    uniqueArray[1]= secondIndex;
+    uniqueArray[2]= thirdIndex;
+}
+
+uniqueImage();
+randomImage(firstImage,firstIndex);
+randomImage(secondImage,secondIndex);
+randomImage(thirdImage,thirdIndex);
 
 //////////////////////////////// trace click(event lesten)//////////////////////////
      
-let userAlert=alert('Please Choose an image');
+let userAlert=alert('Please Choose an Image');
+
 let resultsButton=document.getElementById('resultsButton');
 
 let attempts = 25;
 let counter=0;
 let views=[];
 let likes=[];
+
 imageSection.addEventListener('click',imageCount)
 
 function imageCount(event){ 
@@ -106,11 +94,10 @@ function imageCount(event){
         }
     }
 
-    
-    randomImage();
-    
-    // while(event.target.id !=='firstImage' && event.target.id !== 'secondImage' && event.target.id !== 'thirdImage')
-        
+    uniqueImage();
+    randomImage(firstImage,firstIndex);
+    randomImage(secondImage,secondIndex);
+    randomImage(thirdImage,thirdIndex);
 
     if(counter===attempts){
 
@@ -130,14 +117,12 @@ function imageCount(event){
                         datasets: [{
                             label: 'views',
                             data: views,
-                            // this dataset is drawn below
                             backgroundColor:'RGBA(102, 29, 121, 1)'
                             // 'RGBA(102, 29, 121, 1)','RGBA(104, 17, 43, 1)']
                         },
                         {
                             label: 'votes',
                             data: likes,
-                            // this dataset is drawn on top
                             backgroundColor:'RGBA(220, 153, 205, 1)'
                             // ,'RGBA(227, 133, 135, 1)']  
                         }],
@@ -148,9 +133,7 @@ function imageCount(event){
                         fontColor: 'white',
                         }
                     }
-                   
                 })
-            
         }
     }
 }
