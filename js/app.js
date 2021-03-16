@@ -25,7 +25,7 @@ for(let i=0;i<productsNames.length;i++){
         new BusMall(productsNames[i]);
 }
 
-console.table(BusMall.productsImg);
+//console.table(BusMall.productsImg);
 
 ////////////////////////////// fun to display Random unique Imgs /////////////////////////////
 function randomNum(max,min){
@@ -35,11 +35,11 @@ function randomNum(max,min){
 function randomImage(image,index){
 
   let randomImage=BusMall.productsImg[index];
-  console.log(BusMall.productsImg[index]);
+  //console.log(BusMall.productsImg[index]);
   image.src=randomImage.path;
   image.title=randomImage.name;
   image.alt=randomImage.name;
-  console.log(image);
+  //console.log(image);
   randomImage.views++;
   return randomImage;
 }
@@ -73,12 +73,13 @@ let userAlert=alert('Please Choose an Image');
 
 let resultsButton=document.getElementById('resultsButton');
 
+
 let attempts = 25;
 let counter=0;
 let views=[];
 let likes=[];
 
-imageSection.addEventListener('click',imageCount)
+imageSection.addEventListener('click',imageCount);
 
 function imageCount(event){ 
     
@@ -89,7 +90,7 @@ function imageCount(event){
                 counter++;
                 views.push( BusMall.productsImg[i].views);
                 likes.push( BusMall.productsImg[i].likes);
-                console.table(views,likes);
+                //console.table(views,likes);
             }
         }
     }
@@ -98,6 +99,9 @@ function imageCount(event){
     randomImage(firstImage,firstIndex);
     randomImage(secondImage,secondIndex);
     randomImage(thirdImage,thirdIndex);
+   
+    localStorage.setItem('productImages',JSON.stringify( BusMall.productsImg));
+    storageData ();
 
     if(counter===attempts){
 
@@ -138,7 +142,14 @@ function imageCount(event){
     }
 }
   
-            
+function  storageData (){
+    let storage=localStorage.getItem('productImages');
+    storage=JSON.parse(storage);
+    storage.views++;
+    storage.likes++;
+    console.log(storage);
+    return storage;
+}           
 
 
    
