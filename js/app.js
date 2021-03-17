@@ -40,7 +40,8 @@ function randomImage(image,index){
   image.title=randomImage.name;
   image.alt=randomImage.name;
   //console.log(image);
-  randomImage.views++;
+//   randomImage.views++;
+ BusMall.productsImg[index].views++;
   return randomImage;
 }
 
@@ -67,17 +68,16 @@ randomImage(firstImage,firstIndex);
 randomImage(secondImage,secondIndex);
 randomImage(thirdImage,thirdIndex);
 
-//////////////////////////////// trace click(event lesten)//////////////////////////
+//////////////////////////////// trace click(event listener)//////////////////////////
      
 let userAlert=alert('Please Choose an Image');
 
 let resultsButton=document.getElementById('resultsButton');
 
 
-let attempts = 25;
+let attempts =25;
 let counter=0;
-let views=[];
-let likes=[];
+
 
 imageSection.addEventListener('click',imageCount);
 
@@ -88,9 +88,6 @@ function imageCount(event){
             if( event.target.title === BusMall.productsImg[i].name ){
                 BusMall.productsImg[i].likes++;
                 counter++;
-                views.push( BusMall.productsImg[i].views);
-                likes.push( BusMall.productsImg[i].likes);
-                //console.table(views,likes);
             }
         }
     }
@@ -99,57 +96,97 @@ function imageCount(event){
     randomImage(firstImage,firstIndex);
     randomImage(secondImage,secondIndex);
     randomImage(thirdImage,thirdIndex);
-   
-    localStorage.setItem('productImages',JSON.stringify( BusMall.productsImg));
-    storageData ();
 
+    // localStorage.setItem('productImages', JSON.stringify( BusMall.productsImg));
+   
     if(counter===attempts){
 
         imageSection.removeEventListener('click',imageCount);
         let button=document.createElement('button');
         resultsButton.appendChild(button);
         button.textContent='Results';
-        resultsButton.addEventListener('click',resultDesplay);
-    
-        function resultDesplay(event){
-           
-            let ctx = document.getElementById('myChart');
 
-                let myChart = new Chart(ctx,{
-                    type: 'bar',
-                    data: {
-                        datasets: [{
-                            label: 'views',
-                            data: views,
-                            backgroundColor:'RGBA(102, 29, 121, 1)'
-                            // 'RGBA(102, 29, 121, 1)','RGBA(104, 17, 43, 1)']
-                        },
-                        {
-                            label: 'votes',
-                            data: likes,
-                            backgroundColor:'RGBA(220, 153, 205, 1)'
-                            // ,'RGBA(227, 133, 135, 1)']  
-                        }],
-                        labels:productsNames,
-                    },
-                    options: {
-                        labels: {
-                        fontColor: 'white',
-                        }
-                    }
-                })
-        }
+        resultsButton.addEventListener('click',resultDesplay);
+        storageData();
+        
     }
 }
-  
-function  storageData (){
-    let storage=localStorage.getItem('productImages');
-    storage=JSON.parse(storage);
-    storage.views++;
-    storage.likes++;
-    console.log(storage);
-    return storage;
-}           
 
+//////////////////////////////////// Rsult Button listener Fun////////////////////////////////
+function resultDesplay(event){
+
+    let views=[];
+    let likes=[];
+    
+    for(let i=0;i<BusMall.productsImg.length;i++){
+    views.push( BusMall.productsImg[i].views);
+    likes.push( BusMall.productsImg[i].likes);
+    }
+    console.table(views,likes);
+
+    let ctx = document.getElementById('myChart');
+
+        let myChart = new Chart(ctx,{
+            type: 'bar',
+            data: {
+                datasets: [{
+                    label: 'views',
+                    data: views,
+                    backgroundColor:'RGBA(104, 17, 43, 1)',
+                    // 'RGBA(102, 29, 121, 1)','RGBA(104, 17, 43, 1)']
+                },
+                {
+                    label: 'votes',
+                    data: likes,
+                    backgroundColor:'RGBA(227, 133, 135, 1)'
+                    // 'RGBA(220, 153, 205, 1)']  
+                }],
+
+                labels:productsNames,
+            },
+            options: {
+                legend: {
+                labels: {
+                    fontColor: 'white',
+                    fontSize: 16
+                } 
+                },
+                scales: {
+                xAxes: [{
+                    ticks: {
+                       fontColor: "white",
+                       fontSize: 14,
+                    }
+                }],
+                    yAxes:[{
+                         ticks: {
+                            stepSize: 1,
+                            fontColor: "white",
+                            fontSize: 14,
+                         }
+                        }]
+                }
+        }
+        })
+}
+
+console.table(BusMall.productsImg);
+console.log(localStorage);
+
+/////////////////////////////////////////// Local Storage Fun /////////////////////////////
+// function  storageData (){
+
+//     localStorage.setItem('productImages', JSON.stringify( BusMall.productsImg));
+   
+//     const storage= JSON.parse(localStorage.getItem('productImages'));
+//     let sumviews=0;
+//     let sumlikes=0;
+//     for(let i=0; i<productsImg.length;i++){
+//         new  BusMall(storage[i]);
+//         sumviews+=storage[i].views;
+//         sumlikes+=storage[i].likes;
+//     }
+// }
+     
 
    
