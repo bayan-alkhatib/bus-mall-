@@ -10,10 +10,10 @@ let thirdImage=document.getElementById('thirdImage');
 //console.log(secondImage);
 
 /////////////////////////////////////////Constructor Fun //////////////////////////
-function BusMall(name){
+function BusMall(name,views,likes){
     this.name=name;
-    this.views=0;
-    this.likes=0;
+    this.views=views;
+    this.likes=likes;
     this.path=`./img/assets/${name}`;
     BusMall.productsImg.push(this);
 }
@@ -21,15 +21,17 @@ function BusMall(name){
 ///////////////////////////////////creat Array of object Imgs ///////////////////////////////
 BusMall.productsImg=[];
 
+storageData();
+
 for(let i=0;i<productsNames.length;i++){
-        new BusMall(productsNames[i]);
+        new BusMall(productsNames[i],0,0);
 }
 
 //console.table(BusMall.productsImg);
 
 ////////////////////////////// fun to display Random unique Imgs /////////////////////////////
 function randomNum(max,min){
-    return Math.floor(Math.random()*(max-min+1)+min)
+    return Math.floor(Math.random()*(max-min+1)+min);
 }
 
 function randomImage(image,index){
@@ -75,7 +77,7 @@ let userAlert=alert('Please Choose an Image');
 let resultsButton=document.getElementById('resultsButton');
 
 
-let attempts =25;
+let attempts =5;
 let counter=0;
 
 
@@ -97,7 +99,7 @@ function imageCount(event){
     randomImage(secondImage,secondIndex);
     randomImage(thirdImage,thirdIndex);
 
-    // localStorage.setItem('productImages', JSON.stringify( BusMall.productsImg));
+    
    
     if(counter===attempts){
 
@@ -106,14 +108,15 @@ function imageCount(event){
         resultsButton.appendChild(button);
         button.textContent='Results';
 
-        resultsButton.addEventListener('click',resultDesplay);
-        storageData();
+        resultsButton.addEventListener('click',resultDisplay);
+         
         
     }
+    localStorage.setItem('productImages', JSON.stringify( BusMall.productsImg));
 }
 
 //////////////////////////////////// Rsult Button listener Fun////////////////////////////////
-function resultDesplay(event){
+function resultDisplay(event){
 
     let views=[];
     let likes=[];
@@ -122,7 +125,7 @@ function resultDesplay(event){
     views.push( BusMall.productsImg[i].views);
     likes.push( BusMall.productsImg[i].likes);
     }
-    console.table(views,likes);
+    //console.table(views,likes);
 
     let ctx = document.getElementById('myChart');
 
@@ -174,19 +177,19 @@ console.table(BusMall.productsImg);
 console.log(localStorage);
 
 /////////////////////////////////////////// Local Storage Fun /////////////////////////////
-// function  storageData (){
+function  storageData (){
 
-//     localStorage.setItem('productImages', JSON.stringify( BusMall.productsImg));
-   
-//     const storage= JSON.parse(localStorage.getItem('productImages'));
-//     let sumviews=0;
-//     let sumlikes=0;
-//     for(let i=0; i<productsImg.length;i++){
-//         new  BusMall(storage[i]);
-//         sumviews+=storage[i].views;
-//         sumlikes+=storage[i].likes;
-//     }
-// }
+   let storage;
+    for(let i=0; i<BusMall.productsImg.length;i++){
+        if(localStorage.getItem('productImages')!== null){
+         storage= JSON.parse(localStorage.getItem('productImages'));
+           }
+         new BusMall(productsNames[i],storage[i].views,storage[i].likes);
+        console.log(storage[i].views);
+        // sumviews+=storage[i].views;
+        // sumlikes+=storage[i].likes;
+    }
+}
      
 
    
