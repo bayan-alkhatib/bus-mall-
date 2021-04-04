@@ -7,7 +7,10 @@ let imageSection = document.getElementById('imageSection');
 let firstImage = document.getElementById('firstImage');
 let secondImage = document.getElementById('secondImage');
 let thirdImage = document.getElementById('thirdImage');
-//console.log(secondImage);
+let resultsButton = document.getElementById('resultsButton');
+let attempts =25;
+let counter = 0;
+
 
 /////////////////////////////////////////Constructor Fun //////////////////////////
 function BusMall(name, views, likes) {
@@ -26,7 +29,9 @@ for (let i = 0; i < productsNames.length; i++) {
 }
 console.log(BusMall.productsImg.length);
 
-
+if(JSON.parse(localStorage.getItem('productImages'))){
+  BusMall.productsImg=JSON.parse(localStorage.getItem('productImages'));
+}
 
 ////////////////////////////// fun to display Random unique Imgs /////////////////////////////
 function randomNum(max, min) {
@@ -36,12 +41,9 @@ function randomNum(max, min) {
 function randomImage(image, index) {
 
   let randomImage = BusMall.productsImg[index];
-  //console.log(BusMall.productsImg[index]);
   image.src = randomImage.path;
   image.title = randomImage.name;
   image.alt = randomImage.name;
-  //console.log(image);
-  //randomImage.views++;
   BusMall.productsImg[index].views++;
   return randomImage;
 }
@@ -71,12 +73,6 @@ randomImage(thirdImage, thirdIndex);
 //////////////////////////////// trace click(event listener)//////////////////////////
 alert('Please Choose an Image');
 
-let resultsButton = document.getElementById('resultsButton');
-
-let attempts =25;
-let counter = 0;
-
-
 imageSection.addEventListener('click', imageCount);
 
 function imageCount(event) {
@@ -95,8 +91,6 @@ function imageCount(event) {
   randomImage(secondImage, secondIndex);
   randomImage(thirdImage, thirdIndex);
 
-
-
   if (counter === attempts) {
 
     imageSection.removeEventListener('click', imageCount);
@@ -107,7 +101,6 @@ function imageCount(event) {
     resultsButton.addEventListener('click', resultDisplay);
 
     localStorage.setItem('productImages', JSON.stringify(BusMall.productsImg));
-    // console.log(typeof 'productImages');
   }
 }
 
@@ -121,8 +114,6 @@ function resultDisplay() {
     views.push(BusMall.productsImg[i].views);
     likes.push(BusMall.productsImg[i].likes);
   }
-  //console.table(views,likes);
-
   let ctx = document.getElementById('myChart');
 
   // eslint-disable-next-line no-undef
@@ -133,13 +124,11 @@ function resultDisplay() {
         label: 'views',
         data: views,
         backgroundColor: 'RGBA(104, 17, 43, 1)',
-        // 'RGBA(102, 29, 121, 1)','RGBA(104, 17, 43, 1)']
       },
       {
         label: 'votes',
         data: likes,
-        backgroundColor: 'RGBA(227, 133, 135, 1)'
-        // 'RGBA(220, 153, 205, 1)']
+        backgroundColor: 'RGBA(227, 133, 135, 1)',
       }],
 
       labels: productsNames,
@@ -171,17 +160,17 @@ function resultDisplay() {
 }
 
 /////////////////////////////////////////// Local Storage Fun /////////////////////////////
-function storageData() {
+// function storageData() {
 
-  for (let i = 0; i < productsNames.length; i++) {
-    let storage = JSON.parse(localStorage.getItem('productImages'));
-    if (storage !== null) {
-      BusMall.productsImg[i].views = storage[i].views;
-      BusMall.productsImg[i].likes = storage[i].likes;
+//   for (let i = 0; i < productsNames.length; i++) {
+//     let storage = JSON.parse(localStorage.getItem('productImages'));
+//     if (storage !== null) {
+//       BusMall.productsImg[i].views = storage[i].views;
+//       BusMall.productsImg[i].likes = storage[i].likes;
 
-    }
-  }
-}
-storageData();
+//     }
+//   }
+// }
+// storageData();
 
 
