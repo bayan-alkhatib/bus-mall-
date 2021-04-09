@@ -12,6 +12,7 @@ h1 {
 section{
     width: 95%;
     margin: auto;
+    display:block;
 }
 section img{
     width:32%;
@@ -19,8 +20,12 @@ section img{
     height:50vh;
  padding-right:10px; 
  border-radius: 20px;
+ margin-bottom:20px ;
 }
-
+#resultsButton{
+    display: block;
+    width:100% ;
+}
 #resultsButton button{
     margin-top:15px ;
     padding: 15px 40px;

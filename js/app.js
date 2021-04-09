@@ -4,13 +4,12 @@ let productsNames = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'brea
   'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
 
 let imageSection = document.getElementById('imageSection');
-let firstImage = document.getElementById('firstImage');
-let secondImage = document.getElementById('secondImage');
-let thirdImage = document.getElementById('thirdImage');
 let resultsButton = document.getElementById('resultsButton');
+let uniqueArray = [];
+let index;
 let attempts =25;
 let counter = 0;
-
+let randomVariable=Math.floor(Math.random() * (7 - 2) + 2);
 
 /////////////////////////////////////////Constructor Fun //////////////////////////
 function BusMall(name, views, likes) {
@@ -27,7 +26,7 @@ BusMall.productsImg = [];
 for (let i = 0; i < productsNames.length; i++) {
   new BusMall(productsNames[i], 0, 0);
 }
-console.log(BusMall.productsImg.length);
+console.log(BusMall.productsImg);
 
 if(JSON.parse(localStorage.getItem('productImages'))){
   BusMall.productsImg=JSON.parse(localStorage.getItem('productImages'));
@@ -38,37 +37,36 @@ function randomNum(max, min) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-function randomImage(image, index) {
+
+function randomImage(image,index) {
 
   let randomImage = BusMall.productsImg[index];
   image.src = randomImage.path;
   image.title = randomImage.name;
   image.alt = randomImage.name;
   BusMall.productsImg[index].views++;
-  return randomImage;
 }
 
-let uniqueArray = [];
-let firstIndex;
-let secondIndex;
-let thirdIndex;
 
 function uniqueImage() {
-  do {
-    firstIndex = randomNum(BusMall.productsImg.length - 1, 0);
-    secondIndex = randomNum(BusMall.productsImg.length - 1, 0);
-    thirdIndex = randomNum(BusMall.productsImg.length - 1, 0);
-  } while (firstIndex === secondIndex || firstIndex === thirdIndex || secondIndex === thirdIndex || uniqueArray.includes(firstIndex) || uniqueArray.includes(secondIndex) || uniqueArray.includes(thirdIndex));
-
-  uniqueArray[0] = firstIndex;
-  uniqueArray[1] = secondIndex;
-  uniqueArray[2] = thirdIndex;
+  imageSection.innerHTML='';
+  console.log(uniqueArray);
+  for(let i=0;i<randomVariable;i++){
+    do {
+      index = randomNum(BusMall.productsImg.length - 1, 0);
+    }while(uniqueArray.includes(index));
+    uniqueArray.push(index);
+    let image=document.createElement('img');
+    imageSection.appendChild(image);
+    randomImage(image,index);
+  }
+  if(uniqueArray.length>randomVariable){
+    uniqueArray.splice(0,randomVariable);
+  }
+  console.log(uniqueArray,randomVariable);
 }
 
 uniqueImage();
-randomImage(firstImage, firstIndex);
-randomImage(secondImage, secondIndex);
-randomImage(thirdImage, thirdIndex);
 
 //////////////////////////////// trace click(event listener)//////////////////////////
 alert('Please Choose an Image');
@@ -77,19 +75,15 @@ imageSection.addEventListener('click', imageCount);
 
 function imageCount(event) {
 
-  if (event.target.id === 'firstImage' || event.target.id === 'secondImage' || event.target.id === 'thirdImage') {
-    for (let i = 0; i < BusMall.productsImg.length; i++) {
-      if (event.target.title === BusMall.productsImg[i].name) {
-        BusMall.productsImg[i].likes++;
-        counter++;
-      }
+  for (let i = 0; i < BusMall.productsImg.length; i++) {
+    if (event.target.title === BusMall.productsImg[i].name) {
+      BusMall.productsImg[i].likes++;
     }
   }
+  counter++;
+
 
   uniqueImage();
-  randomImage(firstImage, firstIndex);
-  randomImage(secondImage, secondIndex);
-  randomImage(thirdImage, thirdIndex);
 
   if (counter === attempts) {
 
@@ -159,18 +153,5 @@ function resultDisplay() {
   });
 }
 
-/////////////////////////////////////////// Local Storage Fun /////////////////////////////
-// function storageData() {
-
-//   for (let i = 0; i < productsNames.length; i++) {
-//     let storage = JSON.parse(localStorage.getItem('productImages'));
-//     if (storage !== null) {
-//       BusMall.productsImg[i].views = storage[i].views;
-//       BusMall.productsImg[i].likes = storage[i].likes;
-
-//     }
-//   }
-// }
-// storageData();
 
 
